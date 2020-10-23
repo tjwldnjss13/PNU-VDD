@@ -1,8 +1,9 @@
+import torch
 import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-from model1 import Model1
+from model1_gpu import Model1
 from dataset import Dataset
 
 
@@ -11,7 +12,7 @@ if __name__ == '__main__':
     train_root = os.path.join(root, 'train')
     val_root = os.path.join(root, 'val')
 
-    num_epoch = 50
+    num_epoch = 200
     learning_rate = .001
 
     model = Model1(10, learning_rate)
@@ -46,11 +47,12 @@ if __name__ == '__main__':
 
         for i in range(len_train_data):
             x_, y_ = train_images[i], train_labels[i]
+            x_, y_ = torch.Tensor(x_).cuda(), torch.Tensor(y_).cuda()
             output = model.forward(x_)
             loss = model.cross_entropy(output, y_).sum() / len(y_)
             model.backward(x_, output, y_)
 
-            if np.argmax(output) == np.argmax(y_):
+            if torch.argmax(output) == torch.argmax(y_):
                 train_acc += 1
 
             train_loss += loss
@@ -60,7 +62,7 @@ if __name__ == '__main__':
             output = model.forward(x_)
             loss = model.cross_entropy(output, y_).sum() / len(y_)
 
-            if np.argmax(output) == np.argmax(y_):
+            if torch.argmax(output) == torch.argmax(y_):
                 val_acc += 1
 
             val_loss += loss

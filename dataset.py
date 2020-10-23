@@ -36,8 +36,8 @@ class Dataset:
 
         self.labels = Dataset.to_categorical(self.labels, 10)
 
-        print('{} images loaded!!!'.format(len(self.images)))
-        print('{} labels loaded!!!'.format(len(self.labels)))
+        print('{} images loaded'.format(len(self.images)))
+        print('{} labels loaded'.format(len(self.labels)))
 
     def load_image_data(self):
         image_names = os.listdir(self.root)
